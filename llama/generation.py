@@ -114,7 +114,6 @@ class Llama:
             **params,
         )
         tokenizer = Tokenizer(model_path=tokenizer_path)
-        print(tokenizer)
         model_args.vocab_size = tokenizer.n_words
         torch.set_default_tensor_type(torch.cuda.HalfTensor)
         model = Transformer(model_args)
@@ -285,6 +284,7 @@ class Llama:
 
         # concat the input and ref embeddings
         embeds = torch.stack((input_embed, ref_embed), dim=1)
+        print("embeds.shape", embeds.shape)
 
         prev_pos = 0
         eos_reached = torch.tensor([False] * bsz, device="cuda")
@@ -301,7 +301,12 @@ class Llama:
             )
 
         for cur_pos in range(min_prompt_len, total_len):
-            logits = self.model.forward(tokens[:, prev_pos:cur_pos], prev_pos, embeds)
+            if cur_pos == min_prompt_len:
+                logits = self.model.forward(
+                    tokens[:, prev_pos:cur_pos], prev_pos, embeds
+                )
+            else:
+                logits = self.model.forward(tokens[:, prev_pos:cur_pos], prev_pos)
             if temperature > 0:
                 probs = torch.softmax(logits[:, -1] / temperature, dim=-1)
                 next_token = sample_top_p(probs, top_p)

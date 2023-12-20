@@ -52,7 +52,7 @@ torchrun --nproc_per_node 1 example_chat_completion.py \
     --tokenizer_path tokenizer.model \
     --max_seq_len 512 --max_batch_size 6
 
-CUDA_VISIBLE_DEVICES=4 torchrun --nproc_per_node 1 llama/example_graph_generation.py \
+CUDA_VISIBLE_DEVICES=1 torchrun --nproc_per_node 1 llama/example_graph_generation.py \
     --ckpt_dir "/import/c4dm-multitrack-private/C4DM Multitrack Collection/llama/llama-2-7b/" \
     --tokenizer_path "/import/c4dm-multitrack-private/C4DM Multitrack Collection/llama/tokenizer.model" \
     --max_seq_len 1024 --max_batch_size 1

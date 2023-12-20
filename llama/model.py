@@ -484,11 +484,12 @@ class Transformer(nn.Module):
 
         # embed the tokens
         h = self.tok_embeddings(tokens)
-
+        # print("h.shape", h.shape)
         # concatenate with the input embeddings
         if embeds is not None:
             h = torch.cat([embeds, h], dim=1)
             seqlen += embeds.shape[1]
+            # print("h.shape (embeds)", h.shape)
 
         self.freqs_cis = self.freqs_cis.to(h.device)
         freqs_cis = self.freqs_cis[start_pos : start_pos + seqlen]
